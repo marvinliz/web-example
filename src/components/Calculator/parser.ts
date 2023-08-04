@@ -1,18 +1,18 @@
-enum TokenType {
+export enum TokenType {
   NUMBER = 'NUMBER',
   LEFT_PARENTHESES = 'LEFT_PARENTHESES',
   RIGHT_PARENTHESES = 'RIGHT_PARENTHESES',
   PLUS = 'PLUS',
   MINUS = 'MINUS',
-  STAR = 'STAR',
-  DIV = 'DIV',
-  POW = 'POW',
+  MULTIPLY = 'MULTIPLY',
+  DIVIDE = 'DIVIDE',
+  REMINDER = 'REMINDER',
+  POWER = 'POWER',
 }
 
-interface Token {
+export interface Token {
   type: TokenType
-  lexeme: string
-  value: any | null
+  value: string
 }
 
 interface Expression {
@@ -36,12 +36,14 @@ class BinaryExpression implements Expression {
         return left + right
       case TokenType.MINUS:
         return left - right
-      case TokenType.STAR:
+      case TokenType.MULTIPLY:
         return left * right
-      case TokenType.DIV:
+      case TokenType.DIVIDE:
         return left / right
-      case TokenType.POW:
+      case TokenType.POWER:
         return left ** right
+      case TokenType.REMINDER:
+        return left % right
       default:
         throw new Error(`Unknown binary operator ${this.operator.type}`)
     }
@@ -97,19 +99,19 @@ class Parser {
     return this.add()
   }
 
-  add(): Expression {
+  private add(): Expression {
     return this.parseBinary(() => this.mul(), () => this.mul(), TokenType.PLUS, TokenType.MINUS)
   }
 
-  mul(): Expression {
-    return this.parseBinary(() => this.pow(), () => this.pow(), TokenType.STAR, TokenType.DIV)
+  private mul(): Expression {
+    return this.parseBinary(() => this.pow(), () => this.pow(), TokenType.MULTIPLY, TokenType.DIVIDE, TokenType.REMINDER)
   }
 
-  pow(): Expression {
-    return this.parseBinary(() => this.base(), () => this.pow(), TokenType.POW)
+  private pow(): Expression {
+    return this.parseBinary(() => this.base(), () => this.pow(), TokenType.POWER)
   }
 
-  parseBinary(startExpression: () => Expression, repeatingExpression: () => Expression, ...types: TokenType[]): Expression {
+  private parseBinary(startExpression: () => Expression, repeatingExpression: () => Expression, ...types: TokenType[]): Expression {
     let expression = startExpression()
 
     if (this.match(...types)) {
@@ -126,13 +128,13 @@ class Parser {
     return expression
   }
 
-  base(): Expression {
+  private base(): Expression {
     if (this.match(TokenType.MINUS)) {
       const expression = this.parse()
       return new NegativeExpression(expression)
     }
     else if (this.match(TokenType.NUMBER)) {
-      return new NumberExpression(this.previous().value as number)
+      return new NumberExpression(Number.parseFloat(this.previous().value))
     }
     else if (this.match(TokenType.LEFT_PARENTHESES)) {
       const expression = this.parse()
@@ -145,7 +147,7 @@ class Parser {
     }
   }
 
-  match(...types: TokenType[]): boolean {
+  private match(...types: TokenType[]): boolean {
     for (const type of types) {
       if (this.check(type)) {
         this.advance()
@@ -156,25 +158,25 @@ class Parser {
     return false
   }
 
-  check(type: TokenType): boolean {
+  private check(type: TokenType): boolean {
     if (this.isEnd())
       return false
     return this.peek().type === type
   }
 
-  isEnd(): boolean {
+  private isEnd(): boolean {
     return this.current >= this.tokens.length
   }
 
-  advance(): Token {
+  private advance(): Token {
     return this.tokens[this.current++]
   }
 
-  peek(): Token {
+  private peek(): Token {
     return this.tokens[this.current]
   }
 
-  previous(): Token {
+  private previous(): Token {
     return this.tokens[this.current - 1]
   }
 }
