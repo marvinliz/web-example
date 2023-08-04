@@ -7,7 +7,7 @@ enum BackgroundGroup {
   OPERATOR = 'operator',
 }
 
-function InputButton(props: { token?: Token; displayValue?: string; backgroundGroup: BackgroundGroup; onClick: () => void }) {
+function InputButton(props: { token?: Token; displayValue: string; backgroundGroup: BackgroundGroup; onClick: () => void }) {
   let backGroundClassName
   switch (props.backgroundGroup) {
     case BackgroundGroup.NUMBER:
@@ -23,7 +23,7 @@ function InputButton(props: { token?: Token; displayValue?: string; backgroundGr
       className={`text-2xl text-white ${backGroundClassName} rounded-md`}
       onClick={() => props.onClick()}
     >
-      {props.token?.value ?? props.displayValue}
+      {props.displayValue}
     </button>
   )
 }
@@ -84,6 +84,7 @@ function Calculator() {
   }
   const calculate = () => {
     setResult(new Parser(tokens).parse().evaluate().toString())
+    setTokens([])
   }
 
   return (
