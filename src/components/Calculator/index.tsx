@@ -84,7 +84,6 @@ function Calculator() {
   }
   const calculate = () => {
     setResult(new Parser(tokens).parse().evaluate().toString())
-    setTokens([])
   }
 
   return (
