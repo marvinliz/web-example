@@ -43,7 +43,7 @@ function Calculator() {
   const DIVIDE = { type: TokenType.DIVIDE, value: '/' }
   const PERCENT = { type: TokenType.REMINDER, value: '%' }
   const POWER = { type: TokenType.POWER, value: '^' }
-  const NUMBER_0 = { type: TokenType.NUMBER, value: '1' }
+  const NUMBER_0 = { type: TokenType.NUMBER, value: '0' }
   const NUMBER_1 = { type: TokenType.NUMBER, value: '1' }
   const NUMBER_2 = { type: TokenType.NUMBER, value: '2' }
   const NUMBER_3 = { type: TokenType.NUMBER, value: '3' }
