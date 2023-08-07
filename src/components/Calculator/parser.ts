@@ -108,7 +108,7 @@ class Parser {
   }
 
   private pow(): Expression {
-    return this.parseBinary(() => this.base(), () => this.pow(), TokenType.POWER)
+    return this.parseBinary(() => this.leaf(), () => this.leaf(), TokenType.POWER)
   }
 
   private parseBinary(startExpression: () => Expression, repeatingExpression: () => Expression, ...types: TokenType[]): Expression {
@@ -128,7 +128,7 @@ class Parser {
     return expression
   }
 
-  private base(): Expression {
+  private leaf(): Expression {
     if (this.match(TokenType.MINUS)) {
       const expression = this.parse()
       return new NegativeExpression(expression)
@@ -143,7 +143,7 @@ class Parser {
       return new GroupingExpression(expression)
     }
     else {
-      throw new Error(`Number or parentheses expected, but got ${this.peek().type}`)
+      throw new Error(`Leaf expression expected, but got ${this.peek().type}`)
     }
   }
 
