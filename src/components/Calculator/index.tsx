@@ -106,8 +106,8 @@ function Calculator() {
     <div className="grid grid-cols-[repeat(4,5rem)] grid-rows-[minmax(8rem,auto)_repeat(6,4rem)] justify-center mt-8 gap-px">
 
       <div className="col-span-4 bg-black/[.75] flex flex-col items-end justify-around p-3 break-words rounded-md">
-        <div className="text-2xl text-white">{state.tokens.map(v => v.value).join('')}</div>
-        <div className="text-4xl text-white">{state.result}</div>
+        <div className="text-2xl h-2/5 text-white">{state.tokens.map(v => v.value).join('')}</div>
+        <div className="text-5xl h-3/5 text-white">{state.result}</div>
       </div>
 
       <InputButton token={LEFT_PARENTHESES} backgroundGroup={BackgroundGroup.OPERATOR} onClick={() => addOperator(LEFT_PARENTHESES)}/>
