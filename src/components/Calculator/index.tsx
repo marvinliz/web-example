@@ -86,7 +86,14 @@ function Calculator() {
       setState({ ...state, tokens: state.tokens.slice(1) })
   }
   function evaluate() {
-    setState({ ...state, result: new Parser(state.tokens).parse().evaluate().toString(), needReset: true })
+    let result
+    try {
+      result = new Parser(state.tokens).parse().evaluate().toString()
+    }
+    catch (exception) {
+      result = 'Error'
+    }
+    setState({ ...state, result, needReset: true })
   }
   function resetTokensIfNeeded(firstToken: Token) {
     if (state.needReset) {
